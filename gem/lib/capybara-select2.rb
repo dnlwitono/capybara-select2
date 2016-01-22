@@ -5,12 +5,14 @@ require 'rspec/core'
 module Capybara
   module Select2
     def select2(value, options = {})
-      raise "Must pass a hash containing 'from' or 'xpath' or 'css'" unless options.is_a?(Hash) and [:from, :xpath, :css].any? { |k| options.has_key? k }
+      raise "Must pass a hash containing 'from' or 'xpath' or 'css'" unless options.is_a?(Hash) and [:id, :from, :xpath, :css].any? { |k| options.has_key? k }
 
       if options.has_key? :xpath
         select2_container = find(:xpath, options[:xpath])
       elsif options.has_key? :css
         select2_container = find(:css, options[:css])
+      elsif options.has_key? :id
+        select2_container = find_by_id(options[:id])
       else
         select_name = options[:from]
         select2_container = find("label", text: select_name).find(:xpath, '..').find(".select2-container")
